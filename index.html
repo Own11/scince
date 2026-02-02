@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChemPro | Таблица Менделеева</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #38bdf8;
+            --secondary: #818cf8;
+        }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; line-height: 1.6; }
+        nav { background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(10px); padding: 1rem; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #334155; display: flex; justify-content: center; gap: 30px; }
+        nav a { color: var(--text); text-decoration: none; font-weight: 600; transition: 0.3s; }
+        nav a:hover { color: var(--accent); }
+
+        .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+        .element-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; margin-top: 30px; }
+        .element-card { background: var(--card); border: 1px solid #334155; padding: 20px; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; }
+        .element-card:hover { transform: scale(1.05); border-color: var(--accent); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        .symbol { font-size: 1.5rem; font-weight: 800; color: var(--accent); display: block; }
+
+        #fact-display { background: rgba(56, 189, 248, 0.1); border: 1px dashed var(--accent); padding: 20px; border-radius: 15px; margin: 20px 0; min-height: 60px; font-style: italic; }
+
+        .quiz-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid #334155; margin-top: 50px; }
+        .opt-btn { background: #334155; color: white; border: none; padding: 12px 25px; margin: 8px; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .opt-btn:hover { background: var(--secondary); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">🏠 Главная</a>
+    <a href="chat.html">🤖 ИИ Помощник</a>
+</nav>
+
+<div class="hero">
+    <h1>Химия Будущего</h1>
+    <p>Интерактивный справочник по элементам</p>
+</div>
+
+<div class="container">
+    <div id="fact-display">💡 Нажми на элемент, чтобы раскрыть его тайну...</div>
+    
+    <div class="element-grid" id="table"></div>
+
+    <div class="quiz-card">
+        <h2>🔬 Быстрый тест</h2>
+        <p id="question">Загрузка...</p>
+        <div id="options"></div>
+    </div>
+</div>
+
+<script>
+    const elements = [
+        { s: 'H', n: 'Водород', f: 'Самый древний элемент. Появился через мгновение после Большого взрыва.' },
+        { s: 'He', n: 'Гелий', f: 'Был найден на Солнце раньше, чем на Земле.' },
+        { s: 'Li', n: 'Литий', f: 'Настолько мягкий, что его можно разрезать обычным ножом.' },
+        { s: 'C', n: 'Углерод', f: 'Основа всей жизни. Из него состоят и грифель карандаша, и бриллиант.' },
+        { s: 'N', n: 'Азот', f: 'Составляет 78% воздуха, которым мы дышим.' },
+        { s: 'O', n: 'Кислород', f: 'Жидкий кислород имеет нежно-голубой цвет и притягивается магнитом.' }
+    ];
+
+    const table = document.getElementById('table');
+    elements.forEach(el => {
+        const div = document.createElement('div');
+        div.className = 'element-card';
+        div.innerHTML = `<span class="symbol">${el.s}</span><span>${el.n}</span>`;
+        div.onclick = () => document.getElementById('fact-display').innerHTML = `<strong>${el.n}:</strong> ${el.f}`;
+        table.appendChild(div);
+    });
+
+    function nextQuestion() {
+        const el = elements[Math.floor(Math.random() * elements.length)];
+        document.getElementById('question').innerText = `Какой символ принадлежит элементу: ${el.n}?`;
+        const opts = [el.s, 'Fe', 'Ag', 'K'].sort(() => Math.random() - 0.5);
+        const optDiv = document.getElementById('options');
+        optDiv.innerHTML = '';
+        opts.forEach(o => {
+            const b = document.createElement('button');
+            b.className = 'opt-btn';
+            b.innerText = o;
+            b.onclick = () => {
+                alert(o === el.s ? "Верно! 🎉" : "Ошибка! ❌");
+                nextQuestion();
+            };
+            optDiv.appendChild(b);
+        });
+    }
+    nextQuestion();
+</script>
+</body>
+</html>
